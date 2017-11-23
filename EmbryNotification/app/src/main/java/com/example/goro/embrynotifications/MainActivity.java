@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.goro.embrynotifications.fragments.WeightFragment;
 
@@ -28,17 +29,41 @@ public class MainActivity extends AppCompatActivity {
         emailText = findViewById(R.id.email_et);
         submitBtn = findViewById(R.id.registration_btn);
 
+//        if (loginText.equals(" ") || passwordText.equals(" ") || emailText.equals(" ")) {
+//            submitBtn.setEnabled(false);
+//        }
+//
+
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                WeightFragment speedFragment = new WeightFragment();
-                transaction.add(R.id.main, speedFragment).addToBackStack(null).commit();
+                if (loginText.getText().toString().matches(" ")) {
+                    Toast.makeText(getBaseContext(), "Enter login please!!!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (passwordText.getText().toString().matches(" ")) {
+                    Toast.makeText(getApplicationContext(), "Enter password please!!!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (emailText.getText().toString().matches(" ")) {
+                    Toast.makeText(getApplicationContext(), "Enter your Email please!!!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("login", loginText.getText().toString());
+
+
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    WeightFragment weightFragment = new WeightFragment();
+                    weightFragment.setArguments(bundle);
+                    transaction.replace(R.id.main, weightFragment).addToBackStack(null).commit();
+
+
+                }
 
             }
         });
 
     }
-
 }
+
+
