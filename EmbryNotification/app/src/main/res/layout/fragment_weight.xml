@@ -14,6 +14,7 @@
         android:textSize="20sp" />
 
     <EditText
+        android:inputType="numberDecimal"
         android:layout_marginTop="70dp"
         android:id="@+id/weight_et"
         android:layout_width="match_parent"
@@ -26,7 +27,7 @@
         android:layout_height="wrap_content"
         android:text="Enter your weight*" />
     <LinearLayout
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:layout_below="@+id/weight_tv"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
@@ -45,6 +46,12 @@
             android:layout_below="@+id/weight_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <CheckBox
+            android:id="@+id/notifeied_chB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notify me 24 houres later"
+            android:textSize="10sp"/>
 
     </LinearLayout>
 

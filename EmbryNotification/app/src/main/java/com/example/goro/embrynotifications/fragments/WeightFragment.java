@@ -1,5 +1,9 @@
 package com.example.goro.embrynotifications.fragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,14 +13,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.goro.embrynotifications.R;
 import com.example.goro.embrynotifications.database.DatabaseHelper;
+import com.example.goro.embrynotifications.util.ShowNotification;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -28,6 +38,7 @@ public class WeightFragment extends Fragment {
     private EditText weightEditText;
     private Button statisticBtn;
     private Button addBtn;
+    private CheckBox notifyChB;
 
     private List<String> list;
     private DatabaseHelper myDB;
@@ -50,17 +61,42 @@ public class WeightFragment extends Fragment {
         statisticBtn = view.findViewById(R.id.statistic_btn);
         addBtn = view.findViewById(R.id.add_btn);
         myDB = new DatabaseHelper(getContext());
+        notifyChB = view.findViewById(R.id.notifeied_chB);
+
 
         list = new ArrayList<String>();
         list.add(weightEditText.getText().toString());
 
+        notifyChB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (notifyChB.isChecked()) {
+                    Intent notificationIntent = new Intent(getContext(), ShowNotification.class);
+                    PendingIntent contentIntent = PendingIntent.getService(getContext(), 0, notificationIntent,
+                            PendingIntent.FLAG_CANCEL_CURRENT);
+
+                    AlarmManager am = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+                    am.cancel(contentIntent);
+                    am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+                            + AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, contentIntent);
+
+                }
+            }
+        });
+
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+                String currentTime =df.format( Calendar.getInstance().getTime());
+
+                String dayTime = String.valueOf(currentTime);
+
                 String newEntry = weightEditText.getText().toString();
                 if (weightEditText.length() != 0) {
-                    AddData(newEntry);
+                    AddData(dayTime,newEntry);
                     weightEditText.setText("");
+                    notifyChB.setChecked(false);
                 } else {
                     Toast.makeText(getContext(), "You must put something in the text field!", Toast.LENGTH_LONG).show();
                 }
@@ -81,9 +117,9 @@ public class WeightFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void AddData(String newEntry) {
+    public void AddData(String date,String newEntry) {
 
-        boolean insertData = myDB.addData(newEntry);
+        boolean insertData = myDB.addData(date, newEntry);
 
         if (insertData == true) {
             Toast.makeText(getContext(), "Data Successfully Inserted!", Toast.LENGTH_LONG).show();

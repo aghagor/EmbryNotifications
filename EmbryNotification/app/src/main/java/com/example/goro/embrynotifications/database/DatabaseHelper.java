@@ -6,12 +6,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "mylist.db";
-    public static final String TABLE_NAME = "mylist_data";
+    public static final String DATABASE_NAME = "people.db";
+    public static final String TABLE_NAME = "people_table";
     public static final String COL1 = "ID";
-    public static final String COL2 = "ITEM1";
+    public static final String COL2 = "DATE";
+    public static final String COL3 = "WEIGHT";
 
 
     public DatabaseHelper(Context context) {
@@ -20,8 +25,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                " ITEM1 TEXT)";
+        String createTable = "CREATE TABLE " + TABLE_NAME + " ( ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                " DATE TEXT, WEIGHT TEXT)";
         db.execSQL(createTable);
     }
 
@@ -31,23 +36,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean addData(String item1) {
+    public boolean addData(String date, String weight){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL2, item1);
+        contentValues.put(COL2,date);
+        contentValues.put(COL3,weight);
 
-        long result = db.insert(TABLE_NAME, null, contentValues);
+        long result  = db.insert(TABLE_NAME, null, contentValues);
 
-        //if date as inserted incorrectly it will return -1
-        if (result == -1) {
+        if(result == -1){
             return false;
-        } else {
+        }else{
             return true;
         }
     }
-    public Cursor getListContents(){
+
+    public Cursor showData(){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
         return data;
     }
+
+    public boolean updateData(String id, String date, String weight){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL1,id);
+        contentValues.put(COL2,date);
+        contentValues.put(COL3,weight);
+        db.update(TABLE_NAME, contentValues, "ID = ?", new String[] {id});
+        return true;
+    }
+
+    public Integer deleteData(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, "ID = ?", new String[] {id});
+    }
+
+
 }
