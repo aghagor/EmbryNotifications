@@ -14,6 +14,7 @@
         android:textSize="20sp" />
 
     <EditText
+        android:layout_marginTop="70dp"
         android:id="@+id/weight_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,14 +24,29 @@
         android:layout_below="@+id/weight_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter your weight*"
-        android:textSize="20sp" />
-    <Button
-        android:id="@+id/analitics_btn"
-        android:text="Analitics"
-        android:textAllCaps="false"
+        android:text="Enter your weight*" />
+    <LinearLayout
+        android:layout_margin="20dp"
         android:layout_below="@+id/weight_tv"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/add_btn"
+            android:text="Add"
+            android:textAllCaps="false"
+            android:layout_below="@+id/weight_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/statistic_btn"
+            android:text="Statistic"
+            android:textAllCaps="false"
+            android:layout_below="@+id/weight_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>
