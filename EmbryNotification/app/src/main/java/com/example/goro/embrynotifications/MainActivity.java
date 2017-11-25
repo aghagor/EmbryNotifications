@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.add(R.id.main, weightFragment).addToBackStack(null).commit();
 
     }
+
 }
 
 

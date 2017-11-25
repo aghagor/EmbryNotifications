@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <CheckBox
+            android:checked="true"
             android:id="@+id/notifeied_chB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
