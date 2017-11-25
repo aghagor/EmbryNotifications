@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -52,31 +53,56 @@ public class StatisticsFragment extends Fragment {
     private LinkedHashMap<String, List<Data>> mockList;
     private ArrayList<Data> children;
     private ExpandableListViewItem[] collections;
+    private ArrayList<Object> theList;
+    private Cursor data;
+    private StringBuffer buffer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        statistic = (ArrayList<String>) getArguments().getSerializable("weight");
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_statistics, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        expListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
-        fillList();
+        buffer = new StringBuffer();
+
+//        expListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
+//        fillList();
         myDB = new DatabaseHelper(getContext());
 
 
-//        ListView listView = view.findViewById(R.id.list_view);
-        ArrayList<String> theList = new ArrayList<>();
-        Cursor data = myDB.showData();
+        final ListView listView = view.findViewById(R.id.list_view);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (data.getCount() == 0) {
+                    Toast.makeText(getContext(), "There are no contents in this list!", Toast.LENGTH_LONG).show();
+                } else {
+
+                    while (data.moveToNext()) {
+
+                        theList.add(data.getString(2) + " kg");
+                        ListAdapter listAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, theList);
+                        listView.setAdapter(listAdapter);
+
+                        buffer.append("Weight: " + data.getString(2) + "kg" + "\n");
+                        buffer.append("---------------------------------------" + "\n");
+                        display("All Stored Data:", buffer.toString());
+                    }
+                }
+            }
+        });
+        theList = new ArrayList<>();
+        data = myDB.showData();
         if (data.getCount() == 0) {
             Toast.makeText(getContext(), "There are no contents in this list!", Toast.LENGTH_LONG).show();
+
         } else {
 
-//            StringBuffer buffer = new StringBuffer();
+
 //            while (data.moveToNext()) {
 //
 //
@@ -89,12 +115,12 @@ public class StatisticsFragment extends Fragment {
 //
 //                display("All Stored Data:", buffer.toString());
 //            }
-//            while (data.moveToNext()) {
-//
-//                theList.add(data.getString(2) + " kg");
-//                ListAdapter listAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, theList);
-//                listView.setAdapter(listAdapter);
-//            }
+            while (data.moveToNext()) {
+
+                theList.add(data.getString(1));
+                ListAdapter listAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, theList);
+                listView.setAdapter(listAdapter);
+            }
         }
 
         super.onViewCreated(view, savedInstanceState);
@@ -115,8 +141,7 @@ public class StatisticsFragment extends Fragment {
     }
 
 
-
-        public LinkedHashMap<String, List<Data>> getMockList() {
+    public LinkedHashMap<String, List<Data>> getMockList() {
 
 //        Cursor c = myDB.showData();
 //        children = new ArrayList<Data>();
