@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +21,6 @@ import android.widget.Toast;
 import com.example.goro.embrynotifications.R;
 import com.example.goro.embrynotifications.database.DatabaseHelper;
 import com.example.goro.embrynotifications.util.AlarmReciverNotification;
-import com.example.goro.embrynotifications.util.AlarmReciverToast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -122,7 +119,7 @@ public class WeightFragment extends Fragment {
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-                + AlarmManager.INTERVAL_DAY , AlarmManager.INTERVAL_DAY, contentIntent);
+                + AlarmManager.INTERVAL_HALF_HOUR , AlarmManager.INTERVAL_DAY, contentIntent);
         manager.cancel(contentIntent);
     }
 }
