@@ -109,42 +109,15 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void fillList() {
-        LinkedHashMap<String, List<Data>> input = readData(myDB); // get the collection here
+        LinkedHashMap<String, List<Data>> input = getMockList(); // get the collection here
         ExpandableListViewAdapter adapter = new ExpandableListViewAdapter(LayoutInflater.from(getContext()), input);
         expListView.setAdapter(adapter);
     }
 
-    private LinkedHashMap<String, List<Data>> readData(DatabaseHelper myDB) {
-        LinkedHashMap<String, List<Data>> result = new LinkedHashMap<String, List<Data>>();
-        Cursor cursor = null;
-        try {
-            cursor = myDB.showData();
-            while (cursor.moveToNext()) {
-                String dateTime = cursor.getString(cursor.getColumnIndex("datetime"));
-                int id = cursor.getInt(cursor.getColumnIndex("id"));
-                String col1 = cursor.getString(cursor.getColumnIndex("col1"));
-                String col2 = cursor.getString(cursor.getColumnIndex("col2"));
-                List<Data> list = null;
-                if (result.containsKey(dateTime)) {
-                    list = result.get(dateTime);
-                } else {
-                    list = new ArrayList<Data>();
-                    result.put(dateTime, list);
-                }
-                list.add(new Data(id, col1, col2));
-            }
-        } catch (Exception ex) {
-            Log.e("TAG", null, ex);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return result;
-    }
 
-    //    public LinkedHashMap<String, List<Data>> getMockList() {
-//
+
+        public LinkedHashMap<String, List<Data>> getMockList() {
+
 //        Cursor c = myDB.showData();
 //        children = new ArrayList<Data>();
 //        if (c != null && c.moveToFirst()) {
@@ -168,37 +141,37 @@ public class StatisticsFragment extends Fragment {
 //                c.moveToFirst();
 //            }
 //        }
-//        return mockList;
-//    }
-    public LinkedHashMap<String, List<Data>> readData(SQLiteDatabase db) {
-        LinkedHashMap<String, List<Data>> result = new LinkedHashMap<String, List<Data>>();
-        Cursor cursor = null;
-        try {
-            cursor = db.query("MY_TABLE", new String[]{
-                    "datetime", "id", "col1", "col2"
-            }, null, null, null, null, "datetime, id ASC");
-            while (cursor.moveToNext()) {
-                String dateTime = cursor.getString(cursor.getColumnIndex("datetime"));
-                int id = cursor.getInt(cursor.getColumnIndex("id"));
-                String col1 = cursor.getString(cursor.getColumnIndex("col1"));
-                String col2 = cursor.getString(cursor.getColumnIndex("col2"));
-                List<Data> list = null;
-                if (result.containsKey(dateTime)) {
-                    list = result.get(dateTime);
-                } else {
-                    list = new ArrayList<Data>();
-                    result.put(dateTime, list);
-                }
-                list.add(new Data(id, col1, col2));
-            }
-        } catch (Exception ex) {
-            Log.e("TAG", null, ex);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return result;
+        return mockList;
     }
+//    public LinkedHashMap<String, List<Data>> readData(SQLiteDatabase db) {
+//        LinkedHashMap<String, List<Data>> result = new LinkedHashMap<String, List<Data>>();
+//        Cursor cursor = null;
+//        try {
+//            cursor = db.query("MY_TABLE", new String[]{
+//                    "datetime", "id", "col1", "col2"
+//            }, null, null, null, null, "datetime, id ASC");
+//            while (cursor.moveToNext()) {
+//                String dateTime = cursor.getString(cursor.getColumnIndex("datetime"));
+//                int id = cursor.getInt(cursor.getColumnIndex("id"));
+//                String col1 = cursor.getString(cursor.getColumnIndex("col1"));
+//                String col2 = cursor.getString(cursor.getColumnIndex("col2"));
+//                List<Data> list = null;
+//                if (result.containsKey(dateTime)) {
+//                    list = result.get(dateTime);
+//                } else {
+//                    list = new ArrayList<Data>();
+//                    result.put(dateTime, list);
+//                }
+//                list.add(new Data(id, col1, col2));
+//            }
+//        } catch (Exception ex) {
+//            Log.e("TAG", null, ex);
+//        } finally {
+//            if (cursor != null) {
+//                cursor.close();
+//            }
+//        }
+//        return result;
+//    }
 
 }
