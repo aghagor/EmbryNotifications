@@ -48,7 +48,6 @@ public class WeightFragment extends Fragment {
 
 
         loginText = getArguments().getString("login");
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_weight, container, false);
     }
 
@@ -64,6 +63,7 @@ public class WeightFragment extends Fragment {
 
 
         list = new ArrayList<String>();
+
         list.add(weightEditText.getText().toString());
 
 
@@ -79,8 +79,10 @@ public class WeightFragment extends Fragment {
                 if (weightEditText.length() != 0) {
                     AddData(dayTime, newEntry);
                     weightEditText.setText("");
-                    startAlarm();
-                    notifyChB.setChecked(false);
+                    if (notifyChB.isChecked()) {
+                        startAlarm();
+                        notifyChB.setChecked(false);
+                    }
                 } else {
                     Toast.makeText(getContext(), "You must put something in the text field!", Toast.LENGTH_LONG).show();
                 }
@@ -113,14 +115,12 @@ public class WeightFragment extends Fragment {
     }
 
     private void startAlarm() {
-        AlarmManager manager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        Intent notificationIntent = new Intent(getContext(), AlarmReciverNotification.class);
-        PendingIntent contentIntent = PendingIntent.getService(getContext(), 0, notificationIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+        Intent alarmIntent = new Intent(getActivity().getApplicationContext(), AlarmReciverNotification.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, 0);
+        AlarmManager manager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, pendingIntent);
 
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-                + AlarmManager.INTERVAL_HALF_HOUR , AlarmManager.INTERVAL_DAY, contentIntent);
-        manager.cancel(contentIntent);
+        Toast.makeText(getActivity(), "Alarm Set", Toast.LENGTH_SHORT).show();
     }
 }
 
